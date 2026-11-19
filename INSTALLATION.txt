@@ -1,0 +1,21 @@
+BENJAMIN MARC SEO CHECKER 1.0.1
+
+1. Back up your site and use a staging WordPress installation.
+2. In WordPress admin, go to Plugins > Add New Plugin > Upload Plugin.
+3. Upload benjamin-marc-seo-checker.zip and activate it.
+4. Navigate to Tools > BM SEO Checker.
+5. Review published posts and pages. Click a post title to edit it.
+
+LIMITATIONS
+- Only scans saved post/page HTML, not the rendered site or page builder output.
+- Meta descriptions only detected in specific legacy/custom metadata keys.
+- Empty ALT text can be intentional for decorative images; manually review flags.
+- No external HTTP requests, broken-link scanning, or automatic edits.
+- Plugin has not been tested on a live WordPress instance.
+
+BEFORE WORDPRESS.ORG SUBMISSION
+- Create a WordPress.org account and confirm contributor username.
+- Update Contributors in readme.txt to that exact username.
+- Test on current WordPress and PHP versions; update Tested up to truthfully.
+- Review plugin directory guidelines and submit for review.
+- A WordPress.org listing or outbound followed backlink is not guaranteed.
