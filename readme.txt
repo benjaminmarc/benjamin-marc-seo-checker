@@ -4,7 +4,7 @@ Tags: seo, audit, image alt, headings, checklist
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,5 +31,8 @@ The plugin reads common metadata keys for Yoast SEO, Rank Math, and legacy All i
 No. It checks saved post content only.
 
 == Changelog ==
+= 1.0.2 =
+* Added nonce verification for admin report pagination.
+
 = 1.0.1 =
 * Initial release with title, metadata, H1, and image ALT checks.

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Benjamin Marc SEO Checker
  * Description: A lightweight on-page SEO checklist for published posts and pages, including titles, meta descriptions, H1 headings, and image alt text.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Requires at least: 6.0
  * Requires PHP: 7.4
  * Author: Benjamin Marc
@@ -82,7 +82,14 @@ function bmseo_analyze_post($post) {
 
 function bmseo_render_page() {
     if (!current_user_can('edit_others_posts')) { wp_die(esc_html__('Insufficient permissions.', 'benjamin-marc-seo-checker')); }
-    $page = isset($_GET['paged']) ? max(1, absint(wp_unslash($_GET['paged']))) : 1;
+    // Pagination is read-only, but validate the request nonce before reading its value.
+    $page = 1;
+    if (isset($_GET['paged'], $_GET['_wpnonce'])) {
+        $pagination_nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
+        if (wp_verify_nonce($pagination_nonce, 'bmseo_pagination')) {
+            $page = max(1, absint(wp_unslash($_GET['paged'])));
+        }
+    }
     $query = new WP_Query(array(
         'post_type' => array('post', 'page'),
         'post_status' => 'publish',
@@ -123,7 +130,7 @@ function bmseo_render_page() {
     if ($total_pages > 1) {
         echo '<div class="tablenav"><div class="tablenav-pages">';
         echo wp_kses_post(paginate_links(array(
-            'base' => add_query_arg('paged', '%#%', admin_url('tools.php?page=benjamin-marc-seo-checker')),
+            'base' => add_query_arg(array('paged' => '%#%', '_wpnonce' => wp_create_nonce('bmseo_pagination')), admin_url('tools.php?page=benjamin-marc-seo-checker')),
             'format' => '',
             'current' => $page,
             'total' => $total_pages,
