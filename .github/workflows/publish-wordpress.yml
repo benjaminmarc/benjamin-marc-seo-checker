@@ -1,1 +1,40 @@
+name: Publish to WordPress
 
+on: [workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout plugin
+        uses: actions/checkout@v4
+
+      - name: Install SVN
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y subversion
+
+      - name: Verify plugin
+        run: |
+          grep -E 'Version: *1\.0\.2[[:space:]]*$' benjamin-marc-seo-checker.php
+          grep -E '^Stable tag: *1\.0\.2[[:space:]]*$' readme.txt
+          php -l benjamin-marc-seo-checker.php
+
+      - name: Publish plugin
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          svn checkout https://plugins.svn.wordpress.org/benjamin-marc-seo-checker wp-svn
+          cp benjamin-marc-seo-checker.php readme.txt INSTALLATION.txt wp-svn/trunk/
+          cd wp-svn
+          test ! -e tags/1.0.2
+          svn add --force trunk
+          svn copy trunk tags/1.0.2
+          svn commit -m "Release version 1.0.2" \
+            --username "$SVN_USERNAME" \
+            --password "$SVN_PASSWORD" \
+            --non-interactive --no-auth-cache
